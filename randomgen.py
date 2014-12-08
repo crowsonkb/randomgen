@@ -23,9 +23,9 @@ def main():
     print(bold('entropy: {:.1f} bits').format(
         math.log(len(ALPHABET), 2) * args.length), file=sys.stderr)
 
-    for i in range(args.count):
+    for _ in range(args.count):
         s = ''
-        for j in range(args.length):
+        for _ in range(args.length):
             s += rng.choice(ALPHABET)
         print(s)
 
