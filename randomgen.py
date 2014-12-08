@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Generate random passwords."""
+
 import argparse
 import math
 import random
