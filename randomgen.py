@@ -3,11 +3,18 @@
 """Generate random passwords."""
 
 import argparse
+import collections
 import math
 import random
 import sys
 
-ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+ELEMENT_SETS = collections.OrderedDict([
+    ('base10', '0123456789'),
+    ('base16', '0123456789abcdef'),
+    ('BASE16', '0123456789ABCDEF'),
+    ('base58', '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'),
+    ('lower', 'abcdefghijklmnopqrstuvwxyz'),
+])
 
 def bold(string):
     return '\x1b[1m' + string + '\x1b[0m'
@@ -18,15 +25,28 @@ def main():
                         default=5, type=int)
     parser.add_argument('-l', '--length', help='length of passwords generated',
                         default=16, type=int)
+    parser.add_argument('-s', '--set', help='the set to choose elements from',
+                        default='base58', choices=ELEMENT_SETS.keys())
+    parser.add_argument('--sep', help='the periodic separator string to use',
+                        default=' ', type=str)
+    parser.add_argument('--group-size', help='the number of elements in a group'
+                        ' separated by the periodic separator',
+                        default=0, type=int)
     args = parser.parse_args()
 
-    entropy = math.log(len(ALPHABET), 2) * args.length
+    element_set = ELEMENT_SETS[args.set]
+    entropy = math.log(len(element_set), 2) * args.length
     print(bold('entropy: {:.1f} bits'.format(entropy)), file=sys.stderr)
 
     rng = random.SystemRandom()
     for _ in range(args.count):
-        chars = [rng.choice(ALPHABET) for _ in range(0, args.length)]
-        print(''.join(chars))
+        elements = []
+        for i in range(args.length):
+            elements.append(rng.choice(element_set))
+            if args.group_size != 0:
+                if i != args.length - 1 and (i+1) % args.group_size == 0:
+                    elements.append(args.sep)
+        print(''.join(elements))
 
 if __name__ == '__main__':
     main()
