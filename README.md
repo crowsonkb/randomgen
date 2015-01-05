@@ -3,6 +3,8 @@ randomgen
 
 Generate random passwords.
 
+Usage
+-----
 ```
 usage: randomgen.py [-h] [-c COUNT] [-l LENGTH]
                     [-s {base10,base16,BASE16,base58,lower}] [--sep SEP]
