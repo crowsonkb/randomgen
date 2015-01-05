@@ -23,18 +23,18 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--count', help='number of passwords generated',
                         default=5, type=int)
+    parser.add_argument('-e', '--elems', help='the set to choose elements from',
+                        default='lower', choices=ELEMENT_SETS.keys())
+    parser.add_argument('-g', '--group-size', help='the number of elements in a'
+                        ' group separated by the periodic separator',
+                        default=0, type=int)
     parser.add_argument('-l', '--length', help='length of passwords generated',
                         default=16, type=int)
-    parser.add_argument('-s', '--set', help='the set to choose elements from',
-                        default='base58', choices=ELEMENT_SETS.keys())
-    parser.add_argument('--sep', help='the periodic separator string to use',
+    parser.add_argument('-s', '--sep', help='the periodic separator string to use',
                         default=' ', type=str)
-    parser.add_argument('--group-size', help='the number of elements in a group'
-                        ' separated by the periodic separator',
-                        default=0, type=int)
     args = parser.parse_args()
 
-    element_set = ELEMENT_SETS[args.set]
+    element_set = ELEMENT_SETS[args.elems]
     entropy = math.log(len(element_set), 2) * args.length
     print(bold('entropy: {:.1f} bits'.format(entropy)), file=sys.stderr)
 
